@@ -3,22 +3,34 @@ import epub_meta
 import os
 import sys
 
+#
+# export BOOKSORT_ISSUES_PATH=/Users/bvia/Development/Personal/booksort/issues
+# export BOOKSORT_OUTPUT_PATH=/Users/bvia/Development/Personal/booksort/outputs
+# export BOOKSORT_INPUT_PATH=/Users/bvia/Development/Personal/booksort/inputs
+
 def main():
-    sort_books("/mnt/storage/Books/_unorganized/", "/mnt/storage/Books/")
+    inputPath = os.environ["BOOKSORT_INPUT_PATH"]
+    outputPath = os.environ["BOOKSORT_OUTPUT_PATH"]
+    issuesPath = os.environ["BOOKSORT_ISSUES_PATH"]
+    sort_books(inputPath, outputPath, issuesPath)
     
 
 # python function to sort epub and pdf files into title-author folders by reading their metadata
-def sort_books(inputPath: string, outputPath: string):
+def sort_books(inputPath: string, outputPath: string, issuesPath: string):
     files = getAllFiles(inputPath);
     print(files)
     for file in files:
-        bookPath = get_book_metadata(file)
-        print(bookPath);
-        if bookPath is not None:
+        bookPath = getBookTitleAndAuthor(file)
+        # if bookpath is not none and doesn't contain unknown
+        if bookPath and "Unknown" not in bookPath:
             print(bookPath)
             if not os.path.exists(outputPath + "/" + bookPath):
                 os.makedirs(outputPath + "/" + bookPath)
             os.rename(file, outputPath + "/" + bookPath + "/" + bookPath + ".epub")
+        else:
+            print("Moving " + file + " to issues folder")
+            os.rename(file, issuesPath + "/" + file)
+            continue
 
 
 def getAllFiles(path: string):
@@ -31,12 +43,12 @@ def getAllFiles(path: string):
     return files
 
 
-def get_book_metadata(filepath: string):
+def getBookTitleAndAuthor(filepath: string):
     try:
         print("Getting metadata for: " + filepath)
         data = epub_meta.get_epub_metadata(filepath)
         title = data['title'] or "Unknown"
-        authors =", ".join(data['authors'])
+        authors =", ".join(data['authors']) or "Unknown"
         return(title + " - " + authors)
     except epub_meta.EPubException as e:
         print(e)
