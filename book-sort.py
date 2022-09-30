@@ -20,7 +20,14 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
     files = getAllFiles(inputPath);
     print(files)
     for file in files:
-        bookPath = getBookTitleAndAuthor(file)
+        #if file is .epub
+        bookPath = ""
+        if file.endswith(".epub"):
+            bookPath = getEpubTitleAndAuthorPath(file)
+        if file.endswith(".pdf"):
+            bookPath = getPdfTitleAndAuthorPath(file)
+
+
         # if bookpath is not none and doesn't contain unknown
         if bookPath and "Unknown" not in bookPath:
             print(bookPath)
@@ -43,7 +50,7 @@ def getAllFiles(path: string):
     return files
 
 
-def getBookTitleAndAuthor(filepath: string):
+def getEpubTitleAndAuthorPath(filepath: string):
     try:
         print("Getting metadata for: " + filepath)
         data = epub_meta.get_epub_metadata(filepath)
@@ -53,6 +60,10 @@ def getBookTitleAndAuthor(filepath: string):
     except epub_meta.EPubException as e:
         print(e)
         return None
+
+# def getPdfTitleAndAuthorPath(filepath: string):
+#     try:
+        
 
 
 main()
