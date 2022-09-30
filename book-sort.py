@@ -3,6 +3,7 @@ import sys
 import string
 import epub_meta
 import pdfx
+import json
 
 #
 # export BOOKSORT_ISSUES_PATH=/Users/bvia/Development/Personal/booksort/issues
@@ -21,7 +22,6 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
     files = getAllFiles(inputPath);
     print(files)
     for file in files:
-        #if file is .epub
         bookPath = ""
         if file.endswith(".epub"):
             bookPath = getEpubTitleAndAuthorPath(file)
@@ -34,9 +34,10 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
             print(bookPath)
             if not os.path.exists(outputPath + "/" + bookPath):
                 os.makedirs(outputPath + "/" + bookPath)
+            print("SUCCESS: Moving " + bookPath)
             os.rename(file, outputPath + "/" + bookPath + "/" + bookPath)
         else:
-            print("INFO: Moving " + getFileName(file) + " to issues folder")
+            print("WARN: Moving " + getFileName(file) + " to issues folder")
             os.rename(file, issuesPath + "/" + getFileName(file))
             continue
 
@@ -47,7 +48,7 @@ def getAllFiles(path: string):
     files = []
     for r, d, f in os.walk(path):
         for file in f:
-            if '.epub' in file:
+            if '.epub' or '.pdf' in file:
                 files.append(os.path.join(r, file))
     print(files)
     return files
@@ -67,13 +68,14 @@ def getEpubTitleAndAuthorPath(filepath: string):
 def getPdfTitleAndAuthorPath(filepath: string):
     try:
         print("Getting metadata for: " + filepath)
-        data = pdfx.PDFx(filepath)
-        title = data.get_title() or "Unknown"
-        authors = data.get_authors() or "Unknown"
+        pdf = pdfx.PDFx(filepath)
+        metadata = pdf.get_metadata()
+        title = metadata['Title'] or "Unknown"
+        authors = metadata['Author'] or "Unknown"
         return(title + " - " + authors + ".pdf")
-    except pdfx.PDFxException as e:
+    except pdfx.PDFInvalidError as e:
         print(e)
-        return None    
+        return None
 
 
 main()
