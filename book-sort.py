@@ -48,7 +48,8 @@ def getAllFiles(path: string):
     files = []
     for r, d, f in os.walk(path):
         for file in f:
-            if '.epub' or '.pdf' in file:
+            # if file is pdf or epub
+            if file.endswith(".pdf") or file.endswith(".epub"):
                 files.append(os.path.join(r, file))
     print(files)
     return files
