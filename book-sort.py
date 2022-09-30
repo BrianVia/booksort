@@ -10,6 +10,7 @@ import json
 # export BOOKSORT_OUTPUT_PATH=/Users/bvia/Development/Personal/booksort/outputs
 # export BOOKSORT_INPUT_PATH=/Users/bvia/Development/Personal/booksort/inputs
 
+# Main function - reads environment variables and calls sort_books
 def main():
     inputPath = os.environ["BOOKSORT_INPUT_PATH"]
     outputPath = os.environ["BOOKSORT_OUTPUT_PATH"]
@@ -43,9 +44,13 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
             os.rename(file, issuesPath + "/" + getFileName(file))
             continue
 
+# Returns just the file name from a path
+# ie, "/unsorted-books/Book.epub" -> "Book.epub"
 def getFileName(filepath: string):
     return os.path.basename(filepath)
 
+
+# Returns all files in a directory
 def getAllFiles(path: string):
     files = []
     for r, d, f in os.walk(path):
@@ -56,6 +61,7 @@ def getAllFiles(path: string):
     return files
 
 
+# Returns the title and author of an epub file in the format "Title - Author"
 def getEpubTitleAndAuthorPath(filepath: string):
     try:
         print("INFO: Getting metadata for: " + filepath)
@@ -68,9 +74,11 @@ def getEpubTitleAndAuthorPath(filepath: string):
         print(e)
         return None
 
+# Returns the file extension of a file
 def getFileExtension(file):
     return os.path.splitext(file)[1]
 
+# Returns the title and author of a pdf file in the format "Title - Author"
 def getPdfTitleAndAuthorPath(filepath: string):
     issuesPath = os.environ["BOOKSORT_ISSUES_PATH"]
     file = filepath
