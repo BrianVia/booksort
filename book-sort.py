@@ -27,6 +27,8 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
             bookPath = getEpubTitleAndAuthorPath(file)
         if file.endswith(".pdf"):
             bookPath = getPdfTitleAndAuthorPath(file)
+
+        extension = getFileExtension(file)
         
 
         # if bookpath is not none and doesn't contain unknown
@@ -35,7 +37,7 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
             if not os.path.exists(outputPath + "/" + bookPath):
                 os.makedirs(outputPath + "/" + bookPath)
             print("SUCCESS: Moving " + bookPath)
-            os.rename(file, outputPath + "/" + bookPath + "/" + bookPath)
+            os.rename(file, outputPath + "/" + bookPath + "/" + bookPath + extension)
         else:
             print("WARN: Moving " + getFileName(file) + " to issues folder")
             os.rename(file, issuesPath + "/" + getFileName(file))
@@ -48,7 +50,6 @@ def getAllFiles(path: string):
     files = []
     for r, d, f in os.walk(path):
         for file in f:
-            # if file is pdf or epub
             if file.endswith(".pdf") or file.endswith(".epub"):
                 files.append(os.path.join(r, file))
     print(files)
@@ -61,22 +62,23 @@ def getEpubTitleAndAuthorPath(filepath: string):
         data = epub_meta.get_epub_metadata(filepath)
         title = data['title'] or "Unknown"
         authors =", ".join(data['authors']) or "Unknown"
-        return(title + " - " + authors + ".epub")
+        return(title + " - " + authors)
     except epub_meta.EPubException as e:
         print(e)
         return None
+
+def getFileExtension(file):
+    return os.path.splitext(file)[1]
 
 def getPdfTitleAndAuthorPath(filepath: string):
     try:
         print("Getting metadata for: " + filepath)
         pdf = pdfx.PDFx(filepath)
         metadata = pdf.get_metadata()
-        # title = metadata['Title'] or "Unknown"
-        # authors = metadata['Author'] or "Unknown"
-        print(metadata)
+        title = metadata.get("Title") or "Unknown"
+        authors = metadata.get("Author") or "Unknown"
         print("Got metadata for " + filepath + ": " + title + " - " + authors)
-        return "Unknown"
-        # return(title + " - " + authors + ".pdf")
+        return(title + " - " + authors)
     except pdfx.exceptions.PDFInvalidError as e:
         print(e)
         return None
