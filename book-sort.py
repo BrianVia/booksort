@@ -22,22 +22,22 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
     files = getAllFiles(inputPath);
     print(files)
     for file in files:
-        bookPath = ""
+        TitleAndAuthorString = ""
         if file.endswith(".epub"):
-            bookPath = getEpubTitleAndAuthorPath(file)
+            TitleAndAuthorString = getEpubTitleAndAuthorPath(file)
         if file.endswith(".pdf"):
-            bookPath = getPdfTitleAndAuthorPath(file)
+            TitleAndAuthorString = getPdfTitleAndAuthorPath(file)
 
         extension = getFileExtension(file)
         
 
         # if bookpath is not none and doesn't contain unknown
-        if bookPath and "Unknown" not in bookPath:
-            print(bookPath)
-            if not os.path.exists(outputPath + "/" + bookPath):
-                os.makedirs(outputPath + "/" + bookPath)
-            print("SUCCESS: Moving " + bookPath)
-            os.rename(file, outputPath + "/" + bookPath + "/" + bookPath + extension)
+        if TitleAndAuthorString and "Unknown" not in TitleAndAuthorString:
+            if not os.path.exists(outputPath + "/" + TitleAndAuthorString):
+                os.makedirs(outputPath + "/" + TitleAndAuthorString)
+            print("SUCCESS: Moving " + TitleAndAuthorString)
+            os.rename(file, outputPath + "/" + TitleAndAuthorString + "/" + TitleAndAuthorString + extension)
+            # My desired file output path is <BooksDir>/<Title> - <Author>/<Title> - <Author>.{pdf,epub,etc}
         else:
             print("WARN: Moving " + getFileName(file) + " to issues folder")
             os.rename(file, issuesPath + "/" + getFileName(file))
