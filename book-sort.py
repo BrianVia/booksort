@@ -35,11 +35,12 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
                 os.makedirs(outputPath + "/" + bookPath)
             os.rename(file, outputPath + "/" + bookPath + "/" + bookPath + ".epub")
         else:
-            print("Moving " + file + " to issues folder")
-            print(file)
-            # os.rename(file, issuesPath + "/" + file)
+            print("INFO: Moving " + getFileName(file) + " to issues folder")
+            os.rename(file, issuesPath + "/" + getFileName(file))
             continue
 
+def getFileName(filepath: string):
+    return os.path.basename(filepath)
 
 def getAllFiles(path: string):
     files = []
