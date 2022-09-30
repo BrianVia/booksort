@@ -1,7 +1,8 @@
-import string
-import epub_meta
 import os
 import sys
+import string
+import epub_meta
+import pdfx
 
 #
 # export BOOKSORT_ISSUES_PATH=/Users/bvia/Development/Personal/booksort/issues
@@ -26,14 +27,14 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
             bookPath = getEpubTitleAndAuthorPath(file)
         if file.endswith(".pdf"):
             bookPath = getPdfTitleAndAuthorPath(file)
-
+        
 
         # if bookpath is not none and doesn't contain unknown
         if bookPath and "Unknown" not in bookPath:
             print(bookPath)
             if not os.path.exists(outputPath + "/" + bookPath):
                 os.makedirs(outputPath + "/" + bookPath)
-            os.rename(file, outputPath + "/" + bookPath + "/" + bookPath + ".epub")
+            os.rename(file, outputPath + "/" + bookPath + "/" + bookPath)
         else:
             print("INFO: Moving " + getFileName(file) + " to issues folder")
             os.rename(file, issuesPath + "/" + getFileName(file))
@@ -58,14 +59,21 @@ def getEpubTitleAndAuthorPath(filepath: string):
         data = epub_meta.get_epub_metadata(filepath)
         title = data['title'] or "Unknown"
         authors =", ".join(data['authors']) or "Unknown"
-        return(title + " - " + authors)
+        return(title + " - " + authors + ".epub")
     except epub_meta.EPubException as e:
         print(e)
         return None
 
-# def getPdfTitleAndAuthorPath(filepath: string):
-#     try:
-        
+def getPdfTitleAndAuthorPath(filepath: string):
+    try:
+        print("Getting metadata for: " + filepath)
+        data = pdfx.PDFx(filepath)
+        title = data.get_title() or "Unknown"
+        authors = data.get_authors() or "Unknown"
+        return(title + " - " + authors + ".pdf")
+    except pdfx.PDFxException as e:
+        print(e)
+        return None    
 
 
 main()
