@@ -21,7 +21,7 @@ def main():
 # python function to sort epub and pdf files into title-author folders by reading their metadata
 def sort_books(inputPath: string, outputPath: string, issuesPath: string):
     files = getAllFiles(inputPath);
-    print(files)
+    print("INFO: Loaded " + files.count + " files.")
     for file in files:
         TitleAndAuthorString = ""
         if file.endswith(".epub"):
