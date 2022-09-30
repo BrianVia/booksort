@@ -58,10 +58,11 @@ def getAllFiles(path: string):
 
 def getEpubTitleAndAuthorPath(filepath: string):
     try:
-        print("Getting metadata for: " + filepath)
+        print("INFO: Getting metadata for: " + filepath)
         data = epub_meta.get_epub_metadata(filepath)
         title = data['title'] or "Unknown"
         authors =", ".join(data['authors']) or "Unknown"
+        print("INFO:  v c  Got metadata for " + filepath + ": " + title + " - " + authors)
         return(title + " - " + authors)
     except epub_meta.EPubException as e:
         print(e)
@@ -71,22 +72,30 @@ def getFileExtension(file):
     return os.path.splitext(file)[1]
 
 def getPdfTitleAndAuthorPath(filepath: string):
+    issuesPath = os.environ["BOOKSORT_ISSUES_PATH"]
+    file = filepath
     try:
-        print("Getting metadata for: " + filepath)
+        print("INFO: Getting metadata for: " + filepath)
         pdf = pdfx.PDFx(filepath)
         metadata = pdf.get_metadata()
         title = metadata.get("Title") or "Unknown"
         authors = metadata.get("Author") or "Unknown"
-        print("Got metadata for " + filepath + ": " + title + " - " + authors)
+        print("INFO: Got metadata for " + filepath + ": " + title + " - " + authors)
         return(title + " - " + authors)
     except pdfx.exceptions.PDFInvalidError as e:
         print(e)
+        print("ERROR: Moving " + getFileName(file) + " to issues folder")
+        os.rename(file, issuesPath + "/" + getFileName(file))
         return None
     except pdfx.exceptions.PDFExtractionError as e:
         print(e)
+        print("ERROR: Moving " + getFileName(file) + " to issues folder")
+        os.rename(file, issuesPath + "/" + getFileName(file))
         return None
     except pdfx.exceptions.FileNotFoundError as e:
         print(e)
+        print("ERROR: Moving " + getFileName(file) + " to issues folder")
+        os.rename(file, issuesPath + "/" + getFileName(file))
         return None
     
 
