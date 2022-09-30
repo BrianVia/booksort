@@ -71,12 +71,17 @@ def getPdfTitleAndAuthorPath(filepath: string):
         print("Getting metadata for: " + filepath)
         pdf = pdfx.PDFx(filepath)
         metadata = pdf.get_metadata()
-        title = metadata['Title'] or "Unknown"
-        authors = metadata['Author'] or "Unknown"
-        return(title + " - " + authors + ".pdf")
+        # title = metadata['Title'] or "Unknown"
+        # authors = metadata['Author'] or "Unknown"
+        print(metadata)
+        print("Got metadata for " + filepath + ": " + title + " - " + authors)
+        return "Unknown"
+        # return(title + " - " + authors + ".pdf")
     except pdfx.PDFInvalidError as e:
         print(e)
         return None
-
+    except pdfx.PDFExtractionError as e:
+        print(e)
+        return None
 
 main()
