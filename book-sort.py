@@ -36,7 +36,8 @@ def sort_books(inputPath: string, outputPath: string, issuesPath: string):
             os.rename(file, outputPath + "/" + bookPath + "/" + bookPath + ".epub")
         else:
             print("Moving " + file + " to issues folder")
-            os.rename(file, issuesPath + "/" + file)
+            print(file)
+            # os.rename(file, issuesPath + "/" + file)
             continue
 
 
