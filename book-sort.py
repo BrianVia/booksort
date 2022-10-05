@@ -1,9 +1,7 @@
 import os
-import sys
 import string
 import epub_meta
 import pdfx
-import json
 
 #
 # export BOOKSORT_ISSUES_PATH=/Users/bvia/Development/Personal/booksort/issues
