@@ -3,10 +3,15 @@ import string
 import epub_meta
 import pdfx
 
-#
+# MACOS paths
 # export BOOKSORT_ISSUES_PATH=/Users/bvia/Development/Personal/booksort/issues
 # export BOOKSORT_OUTPUT_PATH=/Users/bvia/Development/Personal/booksort/outputs
 # export BOOKSORT_INPUT_PATH=/Users/bvia/Development/Personal/booksort/inputs
+
+#Linux paths
+# export BOOKSORT_ISSUES_PATH=/mnt/storage/Books/_issues
+# export BOOKSORT_OUTPUT_PATH=/mnt/storage/Books/Organized
+# export BOOKSORT_INPUT_PATH=/mnt/storage/Books/_unorganized
 
 # Main function - reads environment variables and calls sort_books
 def main():
