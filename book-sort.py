@@ -69,9 +69,12 @@ def getEpubTitleAndAuthorPath(filepath: string):
     try:
         print("INFO: Getting metadata for: " + filepath)
         data = epub_meta.get_epub_metadata(filepath)
+        if data is None:
+            print("WARN: Metadata could not be extracted for: " + filepath)
+            return None
         title = data['title'] or "Unknown"
         authors =", ".join(data['authors']) or "Unknown"
-        print("INFO:  v c  Got metadata for " + filepath + ": " + title + " - " + authors)
+        print("INFO: Got metadata for " + filepath + ": " + title + " - " + authors)
         return(title + " - " + authors)
     except epub_meta.EPubException as e:
         print(e)
