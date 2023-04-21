@@ -15,9 +15,9 @@ import pdfx
 
 # Main function - reads environment variables and calls sort_books
 def main():
-    inputPath = os.environ["BOOKSORT_INPUT_PATH"]
-    outputPath = os.environ["BOOKSORT_OUTPUT_PATH"]
-    issuesPath = os.environ["BOOKSORT_ISSUES_PATH"]
+    inputPath = os.environ.get("BOOKSORT_INPUT_PATH", "/mnt/storage/Books/_unorganized")
+    outputPath = os.environ.get("BOOKSORT_OUTPUT_PATH", "/mnt/storage/Books/Organized")
+    issuesPath = os.environ.get("BOOKSORT_ISSUES_PATH", "/mnt/storage/Books/_issues")
     sort_books(inputPath, outputPath, issuesPath)
     
 
